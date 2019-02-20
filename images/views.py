@@ -6,18 +6,24 @@ from django.shortcuts import render
 
 from images.forms import SignUpForm
 from images.forms import LoginForm
+from mixpanel import Mixpanel
+
+mp = Mixpanel('bc31cfd87d35ef238a0215c0d2278745')
 
 
 def index(request):
     """Return the logged in page, or the logged out page
     """
-    print('Index view!')
     if request.user.is_authenticated():
+        print('Index view!') 
+        # mp.track(user_id, 'Index View!')
+        print(request)
         return render(request, 'images/index-logged-in.html', {
             'user': request.user
         })
     else:
         return render(request, 'images/index-logged-out.html')
+
 
 
 def signup(request):
@@ -36,8 +42,10 @@ def signup(request):
 
     else:
         form = SignUpForm()
+        
 
     return render(request, 'images/signup.html', {'form': form})
+    mixpanel.track(signup, 'Sign Up')
 
 
 def login(request):
