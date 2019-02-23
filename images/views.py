@@ -12,12 +12,12 @@ mp = Mixpanel('bc31cfd87d35ef238a0215c0d2278745')
 
 
 def index(request):
+    # profile = Profile.objects.get(email=request.user.email)
     """Return the logged in page, or the logged out page
     """
     if request.user.is_authenticated():
         print('Index view!') 
-        # mp.track(user_id, 'Index View!')
-        print(request)
+        # mp.track(Profile, 'Index View!')
         return render(request, 'images/index-logged-in.html', {
             'user': request.user
         })
