@@ -39,13 +39,15 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)
             log_in(request, user)
             return HttpResponseRedirect('/')
+            mp.track(log_in, 'test- new login')
+            
 
     else:
         form = SignUpForm()
         
 
     return render(request, 'images/signup.html', {'form': form})
-    mixpanel.track(signup, 'Sign Up')
+    mp.track(request, 'New Sign Up')
 
 
 def login(request):
