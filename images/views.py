@@ -7,17 +7,13 @@ from django.shortcuts import render
 from images.forms import SignUpForm
 from images.forms import LoginForm
 from mixpanel import Mixpanel
-
 mp = Mixpanel('bc31cfd87d35ef238a0215c0d2278745')
 
 
 def index(request):
-    # profile = Profile.objects.get(email=request.user.email)
     """Return the logged in page, or the logged out page
     """
     if request.user.is_authenticated():
-        print('Index view!') 
-        # mp.track(Profile, 'Index View!')
         return render(request, 'images/index-logged-in.html', {
             'user': request.user
         })
@@ -35,11 +31,12 @@ def signup(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
+            mp.track(username, 'New Sign Up')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             log_in(request, user)
             return HttpResponseRedirect('/')
-            mp.track(log_in, 'test- new login')
+        
             
 
     else:
@@ -47,7 +44,7 @@ def signup(request):
         
 
     return render(request, 'images/signup.html', {'form': form})
-    mp.track(request, 'New Sign Up')
+    mp.track(username, 'New Sign Up')
 
 
 def login(request):
@@ -55,6 +52,7 @@ def login(request):
     """
     if request.method == 'POST':
         username = request.POST['username']
+        mp.track(username, 'Returning User')
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
