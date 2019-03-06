@@ -75,4 +75,7 @@ def logout(request):
     """
     log_out(request)
     return HttpResponseRedirect('/')
-  
+    
+
+
+     
