@@ -27,5 +27,10 @@ function getCorgi() {
     var randomNumber = Math.floor((Math.random() * corgis.length));
     var chosenCorgi = corgis[randomNumber];
     document.getElementById("corgi_image").src = chosenCorgi;
-    mixpanel.track('Get Corgi');
+    //mixpanel.track('Get Corgi');
+}
+
+//Tracks page view upon entering the app
+function pageView() {
+    mixpane.track("Page View");
 }

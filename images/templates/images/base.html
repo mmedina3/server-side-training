@@ -25,11 +25,11 @@ MIXPANEL_CUSTOM_LIB_URL:"file:"===c.location.protocol&&"//cdn.mxpnl.com/libs/mix
 mixpanel.init("bc31cfd87d35ef238a0215c0d2278745");</script><!-- end Mixpanel -->
     </head>
 
-    <body>
+    <body>          
         <ul class="nav nav-tabs">
             <li role="presentation" class="navbar-left"><a class="nav-link" href="{% url 'index' %}">Corgi Images</a></li>
             {% if user.is_authenticated %}
-                <li role="presentation" class="navbar-right"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                <li role="presentation" class="navbar-right"><a class="nav-link" href="{% url 'logout' %}" onclick="reset()">Logout</a></li>
             {% else %}
                 <li role="presentation" class="navbar-right"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
                 <li role="presentation" class="navbar-right"><a class="nav-link" href="{% url 'signup' %}">Signup</a></li>

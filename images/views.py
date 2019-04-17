@@ -7,6 +7,7 @@ from django.shortcuts import render
 from images.forms import SignUpForm
 from images.forms import LoginForm
 from mixpanel import Mixpanel
+import datetime
 mp = Mixpanel('bc31cfd87d35ef238a0215c0d2278745')
 
 
@@ -31,7 +32,10 @@ def signup(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
-            mp.track(username, 'New Sign Up')
+            mp.track(username, 'New Sign Up', {
+                'Username': username,
+                'Signup Date': datetime.datetime.now()
+            })
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             log_in(request, user)
@@ -44,8 +48,14 @@ def signup(request):
         
 
     return render(request, 'images/signup.html', {'form': form})
-    mp.track(username, 'New Sign Up')
 
+
+def save_profile(request):
+    profile = Profile.objects.get(email=request.user.email)
+    distinct_id = form.cleaned_data.get('distinct_id')
+    profile.distinct_id = distinct_id
+    profile.save()
+  
 
 def login(request):
     """Render the login form or log in the user
@@ -71,6 +81,7 @@ def login(request):
 def logout(request):
     """Logout the user
     """
+    mp.track(logout, 'Logout')
     log_out(request)
     return HttpResponseRedirect('/')
     
