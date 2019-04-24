@@ -28,7 +28,7 @@ function getCorgi() {
     var chosenCorgi = corgis[randomNumber];
     document.getElementById("corgi_image").src = chosenCorgi;
     mixpanel.track('Get Image', {
-        'Image Link': chosenCorgi
+        'Image Link': chosenCorgi,
     });
 }
 
@@ -42,6 +42,11 @@ function setProperties() {
   }
   
 
+function login(){
+    mixpanel.identify(username);
+}
+
 function reset() {
     mixpanel.reset();
+    mixpanel.track('Logout')
 }
