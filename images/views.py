@@ -3,11 +3,14 @@ from django.contrib.auth import login as log_in
 from django.contrib.auth import logout as log_out
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
 from images.forms import SignUpForm
 from images.forms import LoginForm
 from mixpanel import Mixpanel
 import datetime
+import urllib
+import json
+
+
 mp = Mixpanel('bc31cfd87d35ef238a0215c0d2278745')
 
 
@@ -21,6 +24,12 @@ def index(request):
     else:
         return render(request, 'images/index-logged-out.html')
 
+def _get_distinct_id(request):
+    """Gets distinct_id from clientside cookie"""
+    raw_cookie = request.COOKIES['mp_bc31cfd87d35ef238a0215c0d2278745_mixpanel']
+    json_cookie = json.loads(urllib.unquote(raw_cookie).decode('utf8'))
+    d_id = json_cookie['distinct_id']
+    return d_id
 
 
 def signup(request):
@@ -32,7 +41,10 @@ def signup(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
-            mp.track(username, 'New Sign Up', {
+            distinct_id = _get_distinct_id(request)
+            mp.alias(username, distinct_id)
+            
+            mp.track(distinct_id, 'New Sign Up', {
                 'Username': username,
                 'Signup Date': datetime.datetime.now()
             })
@@ -49,12 +61,6 @@ def signup(request):
 
     return render(request, 'images/signup.html', {'form': form})
 
-
-def save_profile(request):
-    profile = Profile.objects.get(email=request.user.email)
-    distinct_id = form.cleaned_data.get('distinct_id')
-    profile.distinct_id = distinct_id
-    profile.save()
   
 
 def login(request):
@@ -62,7 +68,9 @@ def login(request):
     """
     if request.method == 'POST':
         username = request.POST['username']
-        mp.track(username, 'Returning User')
+        mp.track(username, 'Login',{
+            'Username': username
+        })
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -81,9 +89,9 @@ def login(request):
 def logout(request):
     """Logout the user
     """
-    mp.track(logout, 'Logout')
     log_out(request)
     return HttpResponseRedirect('/')
+    
     
 
 

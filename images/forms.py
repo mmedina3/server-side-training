@@ -14,6 +14,8 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username', 'password1', 'password2')
 
+        
+
 class LoginForm(AuthenticationForm):
     pass
     class Meta:
