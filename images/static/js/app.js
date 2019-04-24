@@ -41,9 +41,11 @@ function setProperties() {
     document.getElementById("id_distinct_id").value = mixpanel.get_distinct_id();
   }
   
-
-function login(){
-    mixpanel.identify(username);
+ if (document.getElementById("distinct-id")) {
+    var distinctId = document.getElementById("distinct-id").value;
+    if (distinctId) {
+        mixpanel.identify(distinctId);
+    }
 }
 
 function reset() {
