@@ -48,6 +48,13 @@ def signup(request):
                 'Username': username,
                 'Signup Date': datetime.datetime.now()
             })
+
+            mp.people_set(distinct_id, {
+             "Username": username,
+             'Signup Date': datetime.datetime.now(),
+
+            })
+
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             log_in(request, user)
@@ -71,6 +78,10 @@ def login(request):
         mp.track(username, 'Login',{
             'Username': username
         })
+        mp.people_increment(username, {
+         'Number of Logins': 1
+        })
+
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:

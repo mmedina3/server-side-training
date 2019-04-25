@@ -4,6 +4,19 @@ need to add extra functions and the Mixpanel integration code in this
 file.
 **/
 
+if (document.getElementById("distinct-id")) {
+    var distinctId = document.getElementById("distinct-id").value;
+    if (distinctId) {
+        mixpanel.identify(distinctId);
+    }
+}
+
+setTimeout(function() {
+    mixpanel.track('Page Viewed', {
+      'Page': $('h1').text()
+    });
+  }, 1000);
+  
 
 // changes the image to a random corgi via hardcoded links
 function getCorgi() {
@@ -30,6 +43,7 @@ function getCorgi() {
     mixpanel.track('Get Image', {
         'Image Link': chosenCorgi,
     });
+    mixpanel.people.increment({'Number of Images': 1});
 }
 
 //Tracks page view upon entering the app
@@ -40,15 +54,8 @@ function pageView() {
 function setProperties() {
     document.getElementById("id_distinct_id").value = mixpanel.get_distinct_id();
   }
-  
- if (document.getElementById("distinct-id")) {
-    var distinctId = document.getElementById("distinct-id").value;
-    if (distinctId) {
-        mixpanel.identify(distinctId);
-    }
-}
 
 function reset() {
-    mixpanel.reset();
     mixpanel.track('Logout')
+    mixpanel.reset();
 }
